@@ -1,0 +1,25 @@
+Yet Another Docker Doc
+10/1/2018
+
+Based on the bare-bones tutorial at:
+https://docs.docker.com/compose/django/
+
+Create the app/code folders:
+> ccsw_0 
+	> app
+	> code
+
+Put the three files in code:
+requirements.txt
+Dockerfile
+docker-compose.yml
+
+In the terminal, navigate to the code folder and run this command:
+docker-compose run web django-admin.py startproject ccsw .
+Then run this:
+docker-compose up
+
+Then go to your browser and
+http://localhost:8000/
+
+
