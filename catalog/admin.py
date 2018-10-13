@@ -8,22 +8,40 @@ from catalog.models import Author, Genre, Book, BookInstance
 
 # 10-10-2018 edits
 # admin.site.register(Author)
+class BooksInline(admin.TabularInline):
+    model = Book
+    extra = 0
 # AuthorAdmin class
 class AuthorAdmin (admin.ModelAdmin):
     list_display = ('last_name', 'first_name', 'date_of_birth', 'date_of_death')
+    fields = ['first_name', 'last_name', ('date_of_birth', 'date_of_death')]
+    inlines = [BooksInline]
 # register it
 admin.site.register(Author, AuthorAdmin)
 
 # admin.site.register(Book)
+class BooksInstanceInline(admin.TabularInline):
+    model = BookInstance
+    extra = 0
+
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'display_genre')
+    inlines = [BooksInstanceInline]
 
 # admin.site.register(BookInstance)
 
 @admin.register(BookInstance)
 class BookInstanceAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ('status', 'due_back')
+    fieldsets = (
+        (None, {
+            'fields': ('book', 'imprint', 'id')
+        }),
+        ('Availability', {
+            'fields': ('status', 'due_back')
+        }),
+    )
 
 
 admin.site.register(Genre)
