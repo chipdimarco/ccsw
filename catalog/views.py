@@ -3,6 +3,11 @@ from django.shortcuts import render
 # Create your views here.
 # 10-13-2018 from Mozilla Tutorial
 from catalog.models import Book, Author, BookInstance, Genre
+from django.views import generic
+
+# 10-15-2018 from Mozilla Tutorial (Section 6)
+class BookListView(generic.ListView):
+    model = Book
 
 def index(request):
     """View function for home page of site."""
