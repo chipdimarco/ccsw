@@ -5,10 +5,6 @@ from django.shortcuts import render
 from catalog.models import Book, Author, BookInstance, Genre
 from django.views import generic
 
-# 10-15-2018 from Mozilla Tutorial (Section 6)
-class BookListView(generic.ListView):
-    model = Book
-
 def index(request):
     """View function for home page of site."""
 
@@ -31,3 +27,20 @@ def index(request):
 
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
+
+
+# 10-15-2018 from Mozilla Tutorial (Section 6)
+class BookListView(generic.ListView):
+    model = Book
+    paginate_by = 5
+    '''
+    # this option would use a different template
+    context_object_name = 'my_book_list'   # your own name for the list as a template variable
+    queryset = Book.objects.filter(title__icontains='war')[:5] # Get 5 books containing the title war
+    template_name = 'books/my_arbitrary_template_name_list.html'  # Specify your own template name/location
+    '''
+
+# 10-17-2018 from Mozilla Tutorial (Section 6)
+class BookDetailView(generic.DetailView):
+    model = Book
+
