@@ -1,5 +1,9 @@
 from django.db import models
 
+# 10-27-2018
+from django.contrib.auth.models import User
+from datetime import date
+
 # Create your models here.
 # 10-9-2018: Chip from the Mozilla Tutorial
 # Genre
@@ -52,6 +56,7 @@ class BookInstance(models.Model):
     author = models.ForeignKey ('Author', on_delete=models.SET_NULL, null=True)
     imprint = models.CharField(max_length=200)
     due_back = models.DateField(null=True, blank=True)
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     LOAN_STATUS = (
         ('m', 'Maintenance'),
@@ -74,6 +79,12 @@ class BookInstance(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.id} ({self.book.title})'
+        
+    @property
+    def is_overdue(self):
+        if self.due_back and date.today() > self.due_back:
+            return True
+        return False
 
 # Author
 class Author(models.Model):
