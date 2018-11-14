@@ -7,6 +7,7 @@ from django.views import generic
 
 # 10-27-2018
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 # 11-8-2018: Section 9
 import datetime
@@ -123,21 +124,76 @@ def renew_book_librarian(request, pk):
 
     return render(request, 'catalog/book_renew_librarian.html', context)
 
+# 11-13-2018: I'm making this up!
+@permission_required('catalog.can_borrow_book')
+def book_borrow_user(request, pk):
+    """View function for renewing a specific BookInstance by user."""
+    book_instance = get_object_or_404(BookInstance, pk=pk)
+
+    # If this is a POST request then process the Form data
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        book_borrow_form = BorrowBookForm(request.POST)
+
+        # Check if the form is valid:
+        if book_borrow_form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            book_instance.due_back = book_borrow_form.cleaned_data['due_back']
+            book_instance.save()
+
+            # redirect to a new URL:
+            return HttpResponseRedirect('book_borrow_user')
+            #return HttpResponseRedirect(reverse('my-borrowed') )
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        proposed_due_date = datetime.date.today() + datetime.timedelta(weeks=3)
+        book_borrow_form = RenewBookForm(initial={'renewal_date': proposed_due_date})
+
+    context = {
+        'form': book_borrow_form,
+        'book_instance': book_instance,
+    }
+
+    return render(request, 'catalog/book_borrow_user.html', context)
+# end making it up
+
+
 # 11-11-2018: Tutorial Section 9 Forms
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
+# necessary? don't we have this above?
 from catalog.models import Author
 
 class AuthorCreate(CreateView):
     model = Author
     fields = '__all__'
-    initial = {'date_of_death': '11/11/2018'}
+    # initial = {'date_of_death': '11/11/2018'}
 
 class AuthorUpdate(UpdateView):
     model = Author
     fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death']
 
-class AuthorDelete(DeleteView):
+# I added the mixin.  Not sure if it works...
+# Then I added the decorator
+#@permission_required('catalog.can_mark_returned')
+class AuthorDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = 'catalog.can_delete_author'
     model = Author
     success_url = reverse_lazy('authors')
+
+# 11/13/2018: Challenge - Section 9 Forms
+class BookCreate(CreateView):
+    model = Book
+    fields = '__all__'
+
+class BookUpdate(UpdateView):
+    model = Book
+    fields = ['title','author','summary','isbn','genre']
+
+class BookDelete(PermissionRequiredMixin,DeleteView):
+    permission_required = 'catalog.can_delete_book'
+    model = Book
+    success_url = reverse_lazy('books')

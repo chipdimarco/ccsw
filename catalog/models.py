@@ -33,6 +33,12 @@ class Book(models.Model):
     # Genre class has already been defined so we can specify the object above.
     genre = models.ManyToManyField(Genre, help_text='Select a genre for this book')
     
+    class Meta:
+        # added the permissions attribute then run makemigrations/migrate
+        # docker exec -it [container name] sh
+        permissions = (("can_delete_book", "Delete book"),)
+    
+
     def __str__(self):
         """String for representing the Model object."""
         return self.title
@@ -75,6 +81,9 @@ class BookInstance(models.Model):
 
     class Meta:
         ordering = ['due_back']
+        # added permissions attribute and ran makemigrations/migrate
+        permissions = (("can_mark_returned", "Set book as returned"),
+                        ("can_borrow_book", "User can borrow books"),)
 
     def __str__(self):
         """String for representing the Model object."""
@@ -96,6 +105,8 @@ class Author(models.Model):
 
     class Meta:
         ordering = ['last_name', 'first_name']
+        # 11-11-2018: added permissions attribute and ran makemigrations/migrate
+        permissions = (("can_delete_author", "Can delete Author records"),)
     
     def get_absolute_url(self):
         """Returns the url to access a particular author instance."""
