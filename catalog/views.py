@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import permission_required
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from catalog.forms import RenewBookForm
+from catalog.forms import RenewBookForm, BorrowBookForm
 
 def index(request):
     """View function for home page of site."""

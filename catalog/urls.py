@@ -12,8 +12,8 @@ urlpatterns = [
     path('author/<int:pk>', views.AuthorDetailView.as_view(), name='author-detail'),
     path('mybooks/', views.LoanedBooksByUserListView.as_view(), name='my-borrowed'),
     path('borrowed/', views.LoanedBooksLibrarianListView.as_view(), name='all-borrowed'),
-    path('book/<int:pk>/renew/', views.renew_book_librarian, name='renew-book-librarian'),
-#    path('book/<uuid:pk>/renew/', views.renew_book_librarian, name='renew-book-librarian'),
+    # path('book/<int:pk>/renew/', views.renew_book_librarian, name='renew-book-librarian'),
+    path('book/<uuid:pk>/renew/', views.renew_book_librarian, name='renew-book-librarian'),
 ]
 # 11-11-2018 Section 9 Forms
 urlpatterns += [  
@@ -27,5 +27,6 @@ urlpatterns += [
     path('book/create/', views.BookCreate.as_view(), name='book_create'),
     path('book/<int:pk>/update/', views.BookUpdate.as_view(), name='book_update'),
     path('book/<int:pk>/delete/', views.BookDelete.as_view(), name='book_delete'),
-    path('book/<int:pk>/borrow/', views.book_borrow_user, name='book_borrow_user'),
+#    path('book/<int:pk>/borrow/', views.book_borrow_user, name='book_borrow_user'),
+    path('book/<uuid:pk>/borrow/', views.book_borrow_user, name='book_borrow_user'),
 ]
