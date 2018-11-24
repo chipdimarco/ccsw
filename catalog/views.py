@@ -49,7 +49,7 @@ def index(request):
 # 10-15-2018 from Mozilla Tutorial (Section 6)
 class BookListView(generic.ListView):
     model = Book
-    paginate_by = 5
+    paginate_by = 10
     '''
     # this option would use a different template
     context_object_name = 'my_book_list'   # your own name for the list as a template variable
@@ -64,7 +64,7 @@ class BookDetailView(generic.DetailView):
 # 10-21-2018 from Mozilla Tutorial (Section 6)
 class AuthorListView(generic.ListView):
     model = Author
-    paginate_by = 5
+    paginate_by = 10
 
 # 10-21-2018 from Mozilla Tutorial (Section 6)
 class AuthorDetailView(generic.DetailView):
@@ -75,7 +75,7 @@ class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
     """Generic class-based view listing books on loan to current user."""
     model = BookInstance
     template_name ='catalog/bookinstance_list_borrowed_user.html'
-    paginate_by = 5
+    paginate_by = 10
     
     def get_queryset(self):
         return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='o').order_by('due_back')
@@ -125,7 +125,7 @@ def renew_book_librarian(request, pk):
     return render(request, 'catalog/book_renew_librarian.html', context)
 
 # 11-13-2018: I'm making this up!
-@permission_required('catalog.can_borrow_book')
+#@permission_required('catalog.can_borrow_book')
 def book_borrow_user(request, pk):
     """View function for renewing a specific BookInstance by user."""
     book_instance = get_object_or_404(BookInstance, pk=pk)
@@ -139,24 +139,34 @@ def book_borrow_user(request, pk):
         # Check if the form is valid:
         if book_borrow_form.is_valid():
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
-            book_instance.due_back = book_borrow_form.cleaned_data['due_back']
+            book_instance.due_back = book_borrow_form.cleaned_data['due_date']
             book_instance.save()
-
             # redirect to a new URL:
-            return HttpResponseRedirect('book_borrow_user')
+            return HttpResponseRedirect('book_borrowed')
+#            return HttpResponseRedirect('book_borrow_user')
             #return HttpResponseRedirect(reverse('my-borrowed') )
 
     # If this is a GET (or any other method) create the default form.
     else:
         proposed_due_date = datetime.date.today() + datetime.timedelta(weeks=3)
-        book_borrow_form = RenewBookForm(initial={'renewal_date': proposed_due_date})
+        book_borrow_form = BorrowBookForm(initial={'due_date': proposed_due_date})
 
     context = {
         'form': book_borrow_form,
         'book_instance': book_instance,
     }
-
     return render(request, 'catalog/book_borrow_user.html', context)
+#    return render(request, 'catalog/book-detail.html', context)
+
+def bookinstance_detail(request, pk):
+    """View function for renewing a specific BookInstance by user."""
+    book_instance = get_object_or_404(BookInstance, pk=pk)
+    context = {
+        'book_instance': book_instance
+    }
+    return render(request, 'catalog/bookinstance_detail.html', context)
+
+
 # end making it up
 
 
