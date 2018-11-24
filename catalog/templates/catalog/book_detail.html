@@ -19,12 +19,8 @@
       {% if copy.status != 'a' %}
         <p><strong>Due to be returned:</strong> {{copy.due_back}}</p>
       {% else %}
-      <p><strong><a href="{% url 'book_borrow_user' copy.pk %}">Available to borrow</a></strong></p>
-        <form action="" method="post">
-          {% csrf_token %}
-          {{ form.as_table }}
-          <input type="submit" value="Borrow">
-        </form>
+      <p><strong><a href="{% url 'book_borrow_user' copy.pk %}">Available to borrow</a></strong></p> ({{ copy.borrower }})
+
       {% endif %}
 
       <p><strong>Imprint:</strong> {{copy.imprint}}</p>
@@ -32,3 +28,4 @@
     {% endfor %}
   </div>
 {% endblock %}
+

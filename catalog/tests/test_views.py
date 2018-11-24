@@ -227,7 +227,9 @@ class RenewBookInstancesViewTest(TestCase):
     def test_redirect_if_logged_in_but_not_correct_permission(self):
         login = self.client.login(username='testuser1', password='1X<ISRUkw+tuK')
         response = self.client.get(reverse('renew-book-librarian', kwargs={'pk': self.test_bookinstance1.pk}))
-        self.assertEqual(response.status_code, 403)
+        # Manually check redirect (Can't use assertRedirect, because the redirect URL is unpredictable)
+        self.assertEqual(response.status_code,302)
+        self.assertTrue(response.url.startswith('/accounts/login/') )
 
     def test_logged_in_with_permission_borrowed_book(self):
         login = self.client.login(username='testuser2', password='2HJ1vRV0Z&3iD')

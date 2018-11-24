@@ -129,7 +129,7 @@ def renew_book_librarian(request, pk):
 def book_borrow_user(request, pk):
     """View function for renewing a specific BookInstance by user."""
     book_instance = get_object_or_404(BookInstance, pk=pk)
-
+    
     # If this is a POST request then process the Form data
     if request.method == 'POST':
 
@@ -140,6 +140,8 @@ def book_borrow_user(request, pk):
         if book_borrow_form.is_valid():
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
             book_instance.due_back = book_borrow_form.cleaned_data['due_date']
+            book_instance.borrower = request.user
+            book_instance.status = 'o'
             book_instance.save()
             # redirect to a new URL:
             return HttpResponseRedirect('book_borrowed')

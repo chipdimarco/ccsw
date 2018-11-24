@@ -24,9 +24,9 @@ class RenewBookForm(forms.Form):
 
 # 11-13-2018 I'm making this up!
 class BorrowBookForm(forms.Form):
-    due_date = forms.DateField(help_text="Enter a date between now and 4 weeks (default 3).")
+    due_date = forms.DateField(help_text="Standard Loan Period: 3 Weeks")
 
-    def clean_renewal_date(self):
+    def clean_due_date(self):
         data = self.cleaned_data['due_date']
         
         # Check if a date is not in the past. 

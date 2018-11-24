@@ -15,7 +15,7 @@ class BorrowBookFormTest(TestCase):
 
     def test_borrow_form_date_field_help_text(self):
         form = BorrowBookForm()
-        self.assertEqual(form.fields['due_date'].help_text, 'Enter a date between now and 4 weeks (default 3).')
+        self.assertEqual(form.fields['due_date'].help_text, 'Standard Loan Period: 3 Weeks')
 
     def test_borrow_form_date_in_past(self):
         date = datetime.date.today() - datetime.timedelta(days=1)
