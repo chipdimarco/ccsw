@@ -105,7 +105,9 @@ class Author(models.Model):
     class Meta:
         ordering = ['last_name', 'first_name']
         # 11-11-2018: added permissions attribute and ran makemigrations/migrate
-        permissions = (("can_delete_author", "Can delete Author records"),)
+        permissions = (("can_delete_author", "Can delete Author records"),
+                        ("can_create_author", "Can create Author records")
+        )
     
     def get_absolute_url(self):
         """Returns the url to access a particular author instance."""

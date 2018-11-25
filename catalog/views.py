@@ -179,10 +179,11 @@ from django.urls import reverse_lazy
 # necessary? don't we have this above?
 from catalog.models import Author
 
-class AuthorCreate(CreateView):
+# 11/25/2018: Section Ten Challenge
+class AuthorCreate(PermissionRequiredMixin, CreateView):
     model = Author
     fields = '__all__'
-    # initial = {'date_of_death': '11/11/2018'}
+    permission_required = 'catalog.can_create_author'
 
 class AuthorUpdate(UpdateView):
     model = Author

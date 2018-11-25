@@ -1,4 +1,11 @@
 # 11-24-2018: Mozilla Tutorial Section 10
+# Summary says:
+# "Check anything that you specify or that is part of the design. 
+# This will include 
+#   -  who has access, 
+#   -  the initial date, 
+#   -  the template used, and 
+#   -  where the view redirects on success."
 
 # 11-24-2018: First Test of Author List View
 from django.test import TestCase
@@ -291,6 +298,30 @@ class RenewBookInstancesViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'renewal_date', 'Invalid date - renewal more than 4 weeks ahead')
 
-#
+# 11-25-2018
 # The same sorts of techniques can be used to test the other view.
 # Challenge: Create tests for the AuthorCreate view
+class AuthorCreateTest(TestCase):
+    def setUp(self):
+        # Create a user
+        test_user1 = User.objects.create_user(username='testuser1', password='1X<ISRUkw+tuK')
+        test_user2 = User.objects.create_user(username='testuser2', password='2HJ1vRV0Z&3iD')
+
+        test_user1.save()
+        test_user2.save()
+        
+        permission = Permission.objects.get(name='Can create Author records')
+        test_user2.user_permissions.add(permission)
+        test_user2.save()
+
+    def test_create_author_with_permission(self):
+        login = self.client.login(username='testuser2', password='2HJ1vRV0Z&3iD')
+        response = self.client.post(reverse('author_create'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_author_without_permission(self):
+        login = self.client.login(username='testuser1', password='1X<ISRUkw+tuK')
+        response = self.client.post(reverse('author_create'))
+        self.assertEqual(response.status_code, 403)
+
+
