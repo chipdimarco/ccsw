@@ -5,19 +5,25 @@ from django.contrib import admin
 # Added from the Mozilla tutorial
 from catalog.models import Author, Genre, Book, BookInstance
 
-
 # 10-10-2018 edits
 # admin.site.register(Author)
 class BooksInline(admin.TabularInline):
     model = Book
     extra = 0
+
+# register it
+# 12/1/2018: 
+# admin.site.register(Author, AuthorAdmin)
 # AuthorAdmin class
+# 12-1-2018: Add decorator
+# "use the @register decorator to register the models (this does exactly the same thing 
+# as the admin.site.register() syntax)
+@admin.register(Author)
 class AuthorAdmin (admin.ModelAdmin):
     list_display = ('last_name', 'first_name', 'date_of_birth', 'date_of_death')
     fields = ['first_name', 'last_name', ('date_of_birth', 'date_of_death')]
     inlines = [BooksInline]
-# register it
-admin.site.register(Author, AuthorAdmin)
+
 
 # admin.site.register(Book)
 class BooksInstanceInline(admin.TabularInline):
@@ -30,7 +36,6 @@ class BookAdmin(admin.ModelAdmin):
     inlines = [BooksInstanceInline]
 
 # admin.site.register(BookInstance)
-
 @admin.register(BookInstance)
 class BookInstanceAdmin(admin.ModelAdmin):
     # 10-27-2018 for borrowers
@@ -44,6 +49,5 @@ class BookInstanceAdmin(admin.ModelAdmin):
             'fields': ('status', 'due_back', 'borrower')
         }),
     )
-
 
 admin.site.register(Genre)

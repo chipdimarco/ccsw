@@ -10,21 +10,21 @@
   <p><strong>Language:</strong> {{ book.language }}</p>  
   <p><strong>Genre:</strong> {% for genre in book.genre.all %} {{ genre }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>  
 
-  <div style="margin-left:20px;margin-top:20px">
+  <div style="margin-left:20px;margin-top:20px;margin-right:20px">
     <h4>Copies</h4>
 
     {% for copy in book.bookinstance_set.all %}
       <hr>
       <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'm' %}text-danger{% else %}text-warning{% endif %}">{{ copy.get_status_display }}</p>
       {% if copy.status != 'a' %}
-        <p><strong>Due to be returned:</strong> {{copy.due_back}}</p>
+        <p><strong>Due Back: </strong> {{copy.due_back}}</p>
       {% else %}
-      <p><strong><a href="{% url 'book_borrow_user' copy.pk %}">Available to borrow</a></strong></p> ({{ copy.borrower }})
-
+      <p><strong><a href="{% url 'book_borrow_user' copy.pk %}">Borrow this book</a></strong></p> 
+      {% if copy.status == 'o' %} ({{ copy.borrower }}) {% endif %}
       {% endif %}
 
-      <p><strong>Imprint:</strong> {{copy.imprint}}</p>
-      <p class="text-muted"><strong>Id:</strong> {{copy.id}}</p>
+      <p><strong>Imprint: </strong> {{copy.imprint}}</p>
+      <p class="text-muted"><strong>Id: </strong> {{copy.id}}</p>
     {% endfor %}
   </div>
 {% endblock %}

@@ -145,8 +145,6 @@ def book_borrow_user(request, pk):
             book_instance.save()
             # redirect to a new URL:
             return HttpResponseRedirect('book_borrowed')
-#            return HttpResponseRedirect('book_borrow_user')
-            #return HttpResponseRedirect(reverse('my-borrowed') )
 
     # If this is a GET (or any other method) create the default form.
     else:
@@ -158,7 +156,6 @@ def book_borrow_user(request, pk):
         'book_instance': book_instance,
     }
     return render(request, 'catalog/book_borrow_user.html', context)
-#    return render(request, 'catalog/book-detail.html', context)
 
 def bookinstance_detail(request, pk):
     """View function for renewing a specific BookInstance by user."""
@@ -168,16 +165,12 @@ def bookinstance_detail(request, pk):
     }
     return render(request, 'catalog/bookinstance_detail.html', context)
 
-
-# end making it up
-
-
 # 11-11-2018: Tutorial Section 9 Forms
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
 # necessary? don't we have this above?
-from catalog.models import Author
+# from catalog.models import Author
 
 # 11/25/2018: Section Ten Challenge
 class AuthorCreate(PermissionRequiredMixin, CreateView):
@@ -189,9 +182,6 @@ class AuthorUpdate(UpdateView):
     model = Author
     fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death']
 
-# I added the mixin.  Not sure if it works...
-# Then I added the decorator
-#@permission_required('catalog.can_mark_returned')
 class AuthorDelete(PermissionRequiredMixin, DeleteView):
     permission_required = 'catalog.can_delete_author'
     model = Author
