@@ -28,7 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost','ccsw.us-east-1.elasticbeanstalk.com']
 
-
 # Application definition
 
 INSTALLED_APPS = [
