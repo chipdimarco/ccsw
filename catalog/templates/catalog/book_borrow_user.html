@@ -1,0 +1,13 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1><center>Borrow This Book</center></h1>
+  <h2>{{ book_instance.book.title }}</h2>
+  <p>Borrower: {{ user.get_username }}</p>
+    
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <input type="submit" value="Submit">
+  </form>
+{% endblock %}
